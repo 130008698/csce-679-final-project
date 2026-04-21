@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drug Repurposing Knowledge Graph</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="app-header">
+  <div class="header-title">Drug Repurposing Knowledge Graph</div>
+  <nav class="header-nav">
+    <a href="#">Home</a>
+    <a href="#" class="active">Explore</a>
+    <a href="#">Validate</a>
+    <a href="#">About</a>
+  </nav>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main id="app-main">
+
+  <!-- ──── LEFT PANEL ──── -->
+  <aside id="left-panel">
+
+    <!-- Search -->
+    <section class="panel-section">
+      <h3>Search</h3>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search Entity" autocomplete="off" />
+        <div id="search-dropdown" class="dropdown hidden"></div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="panel-section">
+      <h3>Filters</h3>
+      <label class="filter-label">
+        <input type="checkbox" id="filter-drug" checked /> Drug
+        <span class="legend-dot drug"></span>
+      </label>
+      <label class="filter-label">
+        <input type="checkbox" id="filter-disease" checked /> Disease
+        <span class="legend-dot disease"></span>
+      </label>
+      <label class="filter-label">
+        <input type="checkbox" id="filter-gene" checked /> Gene
+        <span class="legend-dot gene"></span>
+      </label>
+    </section>
+
+    <!-- Pathfinding -->
+    <section class="panel-section">
+      <h3>Pathfinding</h3>
+      <label class="field-label">Start node</label>
+      <div class="search-box">
+        <input type="text" id="path-start" placeholder="Enter node" autocomplete="off" />
+        <div id="start-dropdown" class="dropdown hidden"></div>
+      </div>
+      <label class="field-label">End node</label>
+      <div class="search-box">
+        <input type="text" id="path-end" placeholder="Enter node" autocomplete="off" />
+        <div id="end-dropdown" class="dropdown hidden"></div>
+      </div>
+      <button id="btn-find-path" class="btn-primary">Search</button>
+      <button id="btn-clear-path" class="btn-secondary">Clear</button>
+    </section>
+
+    <!-- View Mode -->
+    <section class="panel-section">
+      <h3>View Mode</h3>
+      <div class="view-mode-controls">
+        <button id="btn-focus-view" class="btn-mode active">Focus</button>
+        <button id="btn-full-view" class="btn-mode">Show All</button>
+      </div>
+      <p id="view-mode-hint" class="hint-text" style="margin-top:6px;">
+        Showing top entities. Search or click to explore.
+      </p>
+    </section>
+
+    <!-- Stats -->
+    <section class="panel-section" id="stats-section">
+      <h3>Graph Info</h3>
+      <div id="graph-stats"></div>
+    </section>
+  </aside>
+
+  <!-- ──── GRAPH ──── -->
+  <section id="graph-section">
+    <div id="graph-container"></div>
+    <div id="graph-tooltip" class="tooltip hidden"></div>
+  </section>
+
+  <!-- ──── RIGHT PANEL ──── -->
+  <aside id="right-panel">
+    <section class="panel-section">
+      <h3>Path Validation &amp; Evidence</h3>
+      <div id="evidence-content">
+        <p class="hint-text">Select a node or find a path to see evidence here.</p>
+      </div>
+    </section>
+    <section class="panel-section" id="node-info-section" style="display:none">
+      <h3>Node Details</h3>
+      <div id="node-info-content"></div>
+    </section>
+    <section class="panel-section" id="history-section">
+      <h3>Exploration History</h3>
+      <div id="history-content">
+        <p class="hint-text">Your searches and paths will appear here.</p>
+      </div>
+    </section>
+  </aside>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
