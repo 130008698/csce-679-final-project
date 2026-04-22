@@ -16,10 +16,10 @@ Usage:
 
 Outputs graph.json in the same directory.
 """
+import argparse
 import json
 import os
 import re
-import argparse
 from collections import Counter, defaultdict
 
 # ── Paths ──────────────────────────────────────────────────────────────────
@@ -310,14 +310,22 @@ def build_graph(all_triples, max_nodes):
         })
 
     # ── Build links ────────────────────────────────────────────────────────
-    links = []
-    max_edge = 1
+    # Collect all edge counts first so we can normalize against the 95th
+    # percentile — normalizing against the max (which can be 100x the median)
+    # would make almost every confidence score round to 0.00.
+    edge_totals = {}
     for (subj, obj), pc in edge_predicates.items():
         if subj in top_entities and obj in top_entities:
-            total = sum(pc.values())
-            if total > max_edge:
-                max_edge = total
+            edge_totals[(subj, obj)] = sum(pc.values())
 
+    if edge_totals:
+        sorted_counts = sorted(edge_totals.values())
+        p95_idx = max(0, int(len(sorted_counts) * 0.95) - 1)
+        norm_ref = max(sorted_counts[p95_idx], 1)
+    else:
+        norm_ref = 1
+
+    links = []
     for (subj, obj), pred_counts in edge_predicates.items():
         if subj not in top_entities or obj not in top_entities:
             continue
@@ -328,7 +336,7 @@ def build_graph(all_triples, max_nodes):
             'source': subj,
             'target': obj,
             'predicate': top_pred,
-            'confidence': round(min(total / max_edge, 1.0), 2),
+            'confidence': round(min(total / norm_ref, 1.0), 2),
             'count': total,
             'sources': sources,
         })
